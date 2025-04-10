@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+    <div class="container-fluid bg-registration py-5" style="margin: 90px 0;">
+        <div class="container py-5">
+            <div class="row align-items-center">
+                <div class="col-lg-7 mb-5 mb-lg-0">
+                    <div class="mb-4">
+                        <h5 class="text-primary text-uppercase mb-3" style="letter-spacing: 5px;">Need Any Courses</h5>
+                        <h1 class="text-white">30% Off For New Students</h1>
+                    </div>
+                    <p class="text-white">
+                        Unlock your learning potential with an exclusive discount for new students. Enroll today and start your journey!
+                    </p>
+                    <ul class="list-inline text-white m-0">
+                        <li class="py-2"><i class="fa fa-check text-primary mr-3"></i>Learn at your own pace with expert instructors.</li>
+                        <li class="py-2"><i class="fa fa-check text-primary mr-3"></i>Access high-quality study materials anytime.</li>
+                        <li class="py-2"><i class="fa fa-check text-primary mr-3"></i>Boost your skills and career opportunities.</li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-5">
+                    <div class="card border-0">
+                        <div class="card-header bg-light text-center p-4">
+                            <h1 class="m-0">Registration</h1>
+                        </div>
+                        <div class="card-body rounded-bottom bg-primary p-5">
+                            <form method="POST" action="{% url 'register_page' %}">
+                                {% csrf_token %}
+                                {% if messages %}
+                                  {% for message in messages %}
+                                    {% if message.tags == 'success' %}
+                                      <div class="alert alert-success" role="alert">
+                                        {{ message }}
+                                      </div>
+                                    {% elif message.tags == 'error' %}
+                                      <div class="alert alert-danger" role="alert">
+                                        {{ message }}
+                                      </div>
+                                    {% else %}
+                                      <div class="alert alert-info" role="alert">
+                                        {{ message }}
+                                      </div>
+                                    {% endif %}
+                                  {% endfor %}
+                                {% endif %}
+                                <div class="form-group">
+                                    <input type="text" name="username" class="form-control border-0 p-4" placeholder="Enter your username" required>
+                                </div>
+                                <div class="form-group">
+                                    <input type="email" name="email" class="form-control border-0 p-4" placeholder="Enter your email address" required>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" name="phone_number" class="form-control border-0 p-4" placeholder="Enter your phone number" required>
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" name="password1" class="form-control border-0 p-4" placeholder="Enter your password" required>
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" name="password2" class="form-control border-0 p-4" placeholder="Confirm your password" required>
+                                </div>
+                                <div class="form-group">
+                                    <select name="experience" class="form-control" required>
+                                        <option value="">Select a course</option>
+                                        {% for exp in experiences %}
+                                            <option value="{{ exp }}">{{ exp }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div>
+                                    <button class="btn btn-dark btn-block border-0 py-3" type="submit">Register</button>
+                                </div>
+                            </form>
+
+                            <div class="text-center mt-3">
+                                <a href="{% url 'login_page' %}" class="btn btn-light btn-block border-0 py-3">
+                                    Already have an account?
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
