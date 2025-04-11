@@ -41,8 +41,16 @@ class Courses(models.Model):
     course_star = models.CharField(max_length=10)
     course_comment_count = models.CharField(max_length=10, blank=True)
     course_price = models.CharField(max_length=10)
+    slug = models.SlugField(null=False, blank=True, unique=True, db_index=True, editable=False)
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+        super().save(*args, **kwargs)
+    def get_absolute_url(self):
+        return reverse('course_blog', kwargs={'slug': self.slug})
 
 class Teachers(models.Model):
     name = models.CharField(max_length=100)
@@ -145,6 +153,7 @@ class Blog(models.Model):
         super().save(*args, **kwargs)
     def get_absolute_url(self):
         return reverse('single', kwargs={'slug': self.slug})
+
 
 
 

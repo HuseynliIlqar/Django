@@ -1,3 +1,4 @@
+from django.db.models.expressions import result
 from django.utils import timezone
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
@@ -7,6 +8,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout
 from django.core.paginator import Paginator
 from django.core.mail import send_mail
+from django.db.models import Q
 from .forms import ContactForm
 from .models import (
     IndexSlider, AboutUs, ExploreTopSubjects, Courses, Teachers,
@@ -199,8 +201,8 @@ EXPERIENCES = ["Təcrübəsiz", "Tələbə", "Peşəkar"]
 def register_page(request):
     get_in_touch = GetInTouch.objects.all()
     courses = Courses.objects.all()
-    EXPERIENCES = ["Təcrübəsiz", "Tələbə", "Peşəkar"]
 
+    EXPERIENCES = ["Təcrübəsiz", "Tələbə", "Peşəkar"]
 
 
     if request.method == 'POST':
@@ -282,7 +284,6 @@ def profile_page(request):
         "courses": courses,
     })
 
-
 def course_blog(request, pk):
     get_in_touch = GetInTouch.objects.all()
     course = get_object_or_404(Courses, pk=pk)
@@ -330,3 +331,24 @@ def course_apply(request):
         return redirect('profile')
 
     return render(request, 'course_blog.html')
+
+def search_bar(request):
+    keyword = request.GET.get('keyword', '')
+    if keyword:
+        results = Blog.objects.filter(
+            Q(title__icontains=keyword) |
+            Q(title2__icontains=keyword) |
+            Q(description__icontains=keyword) |
+            Q(main_content__icontains=keyword)
+        )
+    else:
+        results = Blog.objects.none()
+
+    paginator = Paginator(results, 2)
+    page_number = request.GET.get('page')
+    page_object = paginator.get_page(page_number)
+
+    return render(request, 'blog.html', {
+        'page_object': page_object,
+        'keyword': keyword,
+    })
