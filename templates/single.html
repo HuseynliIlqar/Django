@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-
 {% load static %}
 
 {% block title %}Single{% endblock %}
@@ -11,7 +10,7 @@
             <div class="d-flex flex-column justify-content-center" style="min-height: 300px">
                 <h3 class="display-4 text-white text-uppercase">Single</h3>
                 <div class="d-inline-flex text-white">
-                    <p class="m-0 text-uppercase"><a class="text-white" href="">Home</a></p>
+                    <p class="m-0 text-uppercase"><a class="text-white" href="{% url 'myapp:index' %}">Home</a></p>
                     <i class="fa fa-angle-double-right pt-1 px-3"></i>
                     <p class="m-0 text-uppercase">Single</p>
                 </div>
@@ -20,150 +19,103 @@
     </div>
     <!-- Header End -->
 
-
     <!-- Detail Start -->
     <div class="container-fluid py-5">
         <div class="container py-5">
             <div class="row">
                 <div class="col-lg-8">
                     <div class="mb-5">
-                        <h6 class="text-primary mb-3">Jan 01, 2050</h6>
-                        <h1 class="mb-5">{{ post.title }}</h1>
+                        <h6 class="text-primary mb-3">{{ post.created_at|date:"M d, Y" }}</h6>
+                        <h1 class="mb-5">{{ post.title|linebreaksbr }}</h1>
                         <img class="img-fluid rounded w-100 mb-4" src="{{ post.image.url }}" alt="Image">
-                        <p>{{ post.description }}</p>
-                        <h2 class="mb-4">{{ post.tile2 }}</h2>
-                        <img class="img-fluid rounded w-50 float-left mr-4 mb-3" src="{{ post.image2.url }}" alt="Image">
-                        <p>{{ post.main_content }}</p>
+                        <p>{{ post.description|linebreaksbr }}</p>
+                        {% if post.title2 %}
+                            <h2 class="mb-4">{{ post.title2|linebreaksbr }}</h2>
+                        {% endif %}
+                        {% if post.image2 %}
+                            <img class="img-fluid rounded w-50 float-left mr-4 mb-3" src="{{ post.image2.url }}" alt="Image">
+                        {% endif %}
+                        <p>{{ post.main_content|linebreaksbr }}</p>
                     </div>
 
-                    <!-- Comment List -->
                     <div class="mb-5">
-                        <h3 class="text-uppercase mb-4" style="letter-spacing: 5px;">3 Comments</h3>
+                        <h3 class="text-uppercase mb-4" style="letter-spacing: 5px;">{{ comments|length }} Rəy</h3>
+                        {% for comment in comments %}
                         <div class="media mb-4">
-                            <img src="{% static 'img/user.jpg' %}" alt="Image" class="img-fluid rounded-circle mr-3 mt-1"
-                                style="width: 45px;">
+                            {% if comment.author and comment.author.profile_picture %}
+                                <img src="{{ comment.author.profile_picture.url }}" alt="Profile Picture"
+                                     class="img-fluid rounded-circle mr-3 mt-1" style="width: 45px;">
+                            {% else %}
+                                <img src="{% static 'img/user.jpg' %}" alt="Default User"
+                                     class="img-fluid rounded-circle mr-3 mt-1" style="width: 45px;">
+                            {% endif %}
                             <div class="media-body">
-                                <h6>John Doe <small><i>01 Jan 2045 at 12:00pm</i></small></h6>
-                                <p>Diam amet duo labore stet elitr ea clita ipsum, tempor labore accusam ipsum et no at.
-                                    Kasd diam tempor rebum magna dolores sed sed eirmod ipsum. Gubergren clita aliquyam
-                                    consetetur sadipscing, at tempor amet ipsum diam tempor consetetur at sit.</p>
-                                <button class="btn btn-sm btn-secondary">Reply</button>
+                                <h6>
+                                    {% if comment.author %}
+                                        {{ comment.author.user.username }}
+                                    {% else %}
+                                        Anonim
+                                    {% endif %}
+                                    <small>
+                                        <i>{{ comment.published_date|date:"d M Y H:i a" }}</i>
+                                    </small>
+                                </h6>
+                                <p>{{ comment.body|linebreaksbr }}</p>
                             </div>
                         </div>
-                        <div class="media mb-4">
-                            <img src="{% static 'img/user.jpg' %}" alt="Image" class="img-fluid rounded-circle mr-3 mt-1"
-                                style="width: 45px;">
-                            <div class="media-body">
-                                <h6>John Doe <small><i>01 Jan 2045 at 12:00pm</i></small></h6>
-                                <p>Diam amet duo labore stet elitr ea clita ipsum, tempor labore accusam ipsum et no at.
-                                    Kasd diam tempor rebum magna dolores sed sed eirmod ipsum. Gubergren clita aliquyam
-                                    consetetur sadipscing, at tempor amet ipsum diam tempor consetetur at sit.</p>
-                                <button class="btn btn-sm btn-secondary">Reply</button>
-                                <div class="media mt-4">
-                                    <img src="{% static 'img/user.jpg' %}" alt="Image" class="img-fluid rounded-circle mr-3 mt-1"
-                                        style="width: 45px;">
-                                    <div class="media-body">
-                                        <h6>John Doe <small><i>01 Jan 2045 at 12:00pm</i></small></h6>
-                                        <p>Diam amet duo labore stet elitr ea clita ipsum, tempor labore accusam ipsum
-                                            et no at. Kasd diam tempor rebum magna dolores sed sed eirmod ipsum.
-                                            Gubergren clita aliquyam consetetur, at tempor amet ipsum diam tempor at
-                                            sit.</p>
-                                        <button class="btn btn-sm btn-secondary">Reply</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        {% empty %}
+                        <p>Hələ heç bir rəy yoxdur.</p>
+                        {% endfor %}
                     </div>
-
-                    <!-- Comment Form -->
-                    <div class="bg-secondary rounded p-5">
-                        <h3 class="text-uppercase mb-4" style="letter-spacing: 5px;">Leave a comment</h3>
-                        <form>
-                            <div class="form-group">
-                                <label for="name">Name *</label>
-                                <input type="text" class="form-control border-0" id="name">
-                            </div>
-                            <div class="form-group">
-                                <label for="email">Email *</label>
-                                <input type="email" class="form-control border-0" id="email">
-                            </div>
-                            <div class="form-group">
-                                <label for="website">Website</label>
-                                <input type="url" class="form-control border-0" id="website">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="message">Message *</label>
-                                <textarea id="message" cols="30" rows="5" class="form-control border-0"></textarea>
-                            </div>
-                            <div class="form-group mb-0">
-                                <input type="submit" value="Leave Comment" class="btn btn-primary py-md-2 px-md-4 font-weight-semi-bold">
-                            </div>
+                    {% if user.is_authenticated %}
+                    <div class="bg-light rounded p-5">
+                        <h3 class="text-uppercase mb-4" style="letter-spacing: 5px;">Rəy Yazın</h3>
+                        {% if new_comment %}
+                        <div class="alert alert-success">
+                            Rəyiniz uğurla əlavə edildi!
+                        </div>
+                        {% endif %}
+                        <form method="post">
+                            {% csrf_token %}
+                            {{ comment_form.as_p }}
+                            <button type="submit" class="btn btn-primary py-md-2 px-md-4 font-weight-semi-bold">Rəyi Göndər</button>
                         </form>
                     </div>
+                    {% else %}
+                    <a class="btn btn-primary py-2 px-4 ml-auto d-none d-lg-block" href="{% url 'myapp:login_page' %}">Rəy yazmaq üçün daxil olun</a>
+                    {% endif %}
                 </div>
 
                 <div class="col-lg-4 mt-5 mt-lg-0">
-                    <!-- Author Bio -->
                     <div class="d-flex flex-column text-center bg-dark rounded mb-5 py-5 px-4">
                         <img src="{{ post.author.profile_picture.url }}" class="img-fluid rounded-circle mx-auto mb-3" style="width: 100px;">
                         <h3 class="text-primary mb-3">{{ post.author.user.username }}</h3>
                         <h3 class="text-uppercase mb-4" style="letter-spacing: 5px;">Tag Cloud</h3>
-                        <p class="text-white m-0">{{ post.author.bio }} </p>
+                        <p class="text-white m-0">{{ post.author.bio }}</p>
                     </div>
-
-
-                    <!-- Search Form -->
                     <div class="mb-5">
-                        <form action="">
-                            <div class="input-group">
-                                <input type="text" class="form-control form-control-lg" placeholder="Keyword">
-                                <div class="input-group-append">
-                                    <span class="input-group-text bg-transparent text-primary"><i
-                                            class="fa fa-search"></i></span>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-
-                    <!-- Category List -->
-                    <div class="mb-5">
-                        <h3 class="text-uppercase mb-4" style="letter-spacing: 5px;">Categories</h3>
+                        <h3 class="text-uppercase mb-4" style="letter-spacing: 5px;">Kateqoriyalar</h3>
                         <ul class="list-group list-group-flush">
+                            {% for category in categories %}
                             <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-                                <a href="" class="text-decoration-none h6 m-0">Web Design</a>
-                                <span class="badge badge-primary badge-pill">150</span>
+                                <a href="{% url 'myapp:category_posts' category.slug %}" class="text-decoration-none h6 m-0">
+                                    {{ category.name }}
+                                </a>
                             </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-                                <a href="" class="text-decoration-none h6 m-0">Web Development</a>
-                                <span class="badge badge-primary badge-pill">131</span>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-                                <a href="" class="text-decoration-none h6 m-0">Online Marketing</a>
-                                <span class="badge badge-primary badge-pill">78</span>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-                                <a href="" class="text-decoration-none h6 m-0">Keyword Research</a>
-                                <span class="badge badge-primary badge-pill">56</span>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-                                <a href="" class="text-decoration-none h6 m-0">Email Marketing</a>
-                                <span class="badge badge-primary badge-pill">98</span>
-                            </li>
+                            {% endfor %}
                         </ul>
                     </div>
-
-                    <!-- Tag Cloud -->
                     <div class="mb-5">
-                        <h3 class="text-uppercase mb-4" style="letter-spacing: 5px;">Tag Cloud</h3>
-                        <div class="d-flex flex-wrap m-n1">
-                            <a href="" class="btn btn-outline-primary m-1">Design</a>
-                            <a href="" class="btn btn-outline-primary m-1">Development</a>
-                            <a href="" class="btn btn-outline-primary m-1">Marketing</a>
-                            <a href="" class="btn btn-outline-primary m-1">SEO</a>
-                            <a href="" class="btn btn-outline-primary m-1">Writing</a>
-                            <a href="" class="btn btn-outline-primary m-1">Consulting</a>
-                        </div>
+                        <h3 class="text-uppercase mb-4" style="letter-spacing: 5px;">Son Yazılar</h3>
+                        {% for p in last_posts %}
+                        <a class="d-flex align-items-center text-decoration-none mb-3" href="{% url 'myapp:single' slug=p.slug %}">
+                            <img class="img-fluid rounded" src="{{ p.image.url }}" alt="{{ p.title }}">
+                            <div class="pl-3">
+                                <h6 class="m-1">{{ p.title }}</h6>
+                                <small>{{ p.created_at|date:"d M Y" }}</small>
+                            </div>
+                        </a>
+                        {% endfor %}
                     </div>
                 </div>
             </div>

@@ -85,7 +85,7 @@
                                 <small class="m-0"><i class="fa fa-users text-primary mr-2"></i>{{ course.student_count }}</small>
                                 <small class="m-0"><i class="far fa-clock text-primary mr-2"></i>{{ course.course_hour }}</small>
                             </div>
-                            <a class="h5" href="">{{ course.title }}</a>
+                            <a class="h5" href="{% url 'myapp:course_blog' course.slug %}"">{{ course.title }}</a>
                             <div class="border-top mt-4 pt-4">
                                 <div class="d-flex justify-content-between">
                                     <h6 class="m-0"><i class="fa fa-star text-primary mr-2"></i>{{ course.course_star }} <small>{{ course.course_comment_count }}</small></h6>
@@ -128,7 +128,7 @@
                             <h1 class="m-0">Registration</h1>
                         </div>
                         <div class="card-body rounded-bottom bg-primary p-5">
-                            <form method="POST" action="{% url 'register_page' %}">
+                            <form method="POST" action="{% url 'myapp:register_page' %}">
                                 {% csrf_token %}
                                 {% if messages %}
                                     <div class="alert alert-danger">
@@ -168,7 +168,7 @@
                             </form>
 
                             <div class="text-center mt-3">
-                                <a href="{% url 'login_page' %}" class="btn btn-light btn-block border-0 py-3">
+                                <a href="{% url 'myapp:login_page' %}" class="btn btn-light btn-block border-0 py-3">
                                     Already have an account?
                                 </a>
                             </div>
@@ -197,11 +197,11 @@
                         <div class="team-img position-relative">
                             <img class="img-fluid" src="{{ teachers.image.url }}" alt="">
                             <div class="team-social">
-                                <a class="btn btn-outline-light btn-square mx-1" href="{{ teachers.social_media_url_1 }}">
+                                <a class="btn btn-outline-light btn-square mx-1" href="{{ teachers.social_media_url_1 }}" target="_blank">
                                     <i class="fab fa-{{ teachers.social_media_icon_1 }}"></i></a>
-                                <a class="btn btn-outline-light btn-square mx-1" href="{{ teachers.social_media_url_2 }}">
+                                <a class="btn btn-outline-light btn-square mx-1" href="{{ teachers.social_media_url_2 }}" target="_blank">
                                     <i class="fab fa-{{ teachers.social_media_icon_2 }}"></i></a>
-                                <a class="btn btn-outline-light btn-square mx-1" href="{{ teachers.social_media_url_3 }}"   >
+                                <a class="btn btn-outline-light btn-square mx-1" href="{{ teachers.social_media_url_3 }}" target="_blank">
                                     <i class="fab fa-{{ teachers.social_media_icon_3 }}"></i></a>
                             </div>
                         </div>
@@ -256,7 +256,7 @@
                     <div class="col-lg-4 mb-4">
                         <div class="blog-item position-relative overflow-hidden rounded mb-2">
                             <img class="img-fluid" src="{{ post.image.url }}" alt="">
-                            <a class="blog-overlay text-decoration-none" href="{% url 'single' post.pk %}">
+                            <a class="blog-overlay text-decoration-none" href="{% url 'myapp:single' slug=post.slug %}">
                                 <h5 class="text-white mb-3">{{ post.title }}</h5>
                                 <p class="text-primary m-0">{{ post.created_at }}</p>
                             </a>

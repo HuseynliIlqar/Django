@@ -40,8 +40,8 @@ class Courses(models.Model):
     student_count = models.CharField(max_length=10)
     course_star = models.CharField(max_length=10)
     course_comment_count = models.CharField(max_length=10, blank=True)
-    course_price = models.CharField(max_length=10)
     slug = models.SlugField(null=False, blank=True, unique=True, db_index=True, editable=False)
+    course_price = models.CharField(max_length=10)
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -133,30 +133,61 @@ class CourseRegistration(models.Model):
     def __str__(self):
         return f"{self.user}"
 
+class Category(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    slug = models.SlugField(unique=True, blank=True)
+
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            # Əsas slug dəyəri yaradılır
+            self.slug = slugify(self.name)
+            original_slug = self.slug
+            counter = 1
+            # Mövcud slug varsa, avtomatik counter əlavə edilir
+            while Category.objects.filter(slug=self.slug).exists():
+                self.slug = f"{original_slug}-{counter}"
+                counter += 1
+        super().save(*args, **kwargs)
 
 class Blog(models.Model):
     title = models.CharField(max_length=100, null=False, blank=False)
     title2 = models.CharField(max_length=100, null=True, blank=True)
     image = models.ImageField(upload_to='images/', null=False, blank=False)
     image2 = models.ImageField(upload_to='images/', null=True, blank=True)
-    author = models.ForeignKey(CourseRegistration, on_delete=models.CASCADE, null=False, blank=False)
+    author = models.ForeignKey('CourseRegistration', on_delete=models.CASCADE, null=False, blank=False)
     description = models.TextField(max_length=1000, null=False, blank=False)
     main_content = models.TextField(max_length=5000, null=True, blank=True)
-    slug = models.SlugField(null=False, blank=True, unique=True, db_index=True, editable=False)
+    slug = models.SlugField(unique=True, editable=False, db_index=True, blank=True)
     is_active = models.BooleanField(default=False)
+    category = models.ManyToManyField(Category, related_name='posts')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.title)
-        super().save(*args, **kwargs)
+            original_slug = self.slug
+            counter = 1
+            while Blog.objects.filter(slug=self.slug).exists():
+                self.slug = f"{original_slug}-{counter}"
+                counter += 1
+        super(Blog, self).save(*args, **kwargs)
+
     def get_absolute_url(self):
         return reverse('single', kwargs={'slug': self.slug})
 
+    def __str__(self):
+        return self.title
 
+class Comment(models.Model):
+    blog = models.ForeignKey(Blog, on_delete=models.CASCADE, related_name='comments')
+    body = models.TextField(max_length=500, blank=True, null=True)
+    active = models.BooleanField(default=True)
+    published_date = models.DateTimeField(auto_now_add=True)
+    author = models.ForeignKey('CourseRegistration', on_delete=models.CASCADE, null=True, blank=True)
 
-
-
-
-
+    def __str__(self):
+        return f"{self.author} - {self.body[:20]}"

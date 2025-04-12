@@ -13,21 +13,19 @@
                 </div>
                 <div class="col-lg-7">
                     <div class="text-left mb-4">
-                        <h5 class="text-primary text-uppercase mb-3" style="letter-spacing: 5px;">{{ course.title }}</h5>
+                        <h5 class="text-primary text-uppercase mb-3" style="letter-spacing: 5px;"></h5>
                         <h1>{{ course.h1 }}</h1>
                     </div>
                     <p>{{ course.course_description }}</p>
                     <div><br><br><br>
                     </div>
                 </div>
-
                 <div>
-                    <br><br><br>
                     <h2>Syllabus</h2>
                     <br>
-                    <br>
                     <p>{{ course.courese_requirements|linebreaksbr }}</p>
-                        <form method="POST" action="{% url 'course_apply' %}">
+                    <br><br>
+                        <form method="POST" action="{% url 'myapp:course_apply' %}">
                             {% csrf_token %}
                             <input type="hidden" name="course_id" value="{{ course.id }}">
                             <button type="submit" class="btn btn-primary py-md-2 px-md-4 font-weight-semi-bold mt-2">
