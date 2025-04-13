@@ -1,44 +1,66 @@
 {% extends 'base.html' %}
-
 {% load static %}
 
-{% block title %}Home{% endblock %}
+{% block title %}Profil Səhifəsi{% endblock %}
 
 {% block content %}
-    <div class="container-fluid py-5">
-    <div class="container py-5">
-
-        {% if messages %}
-          {% for message in messages %}
+<div class="container py-3">  <!-- py-5 əvəzinə py-3 -->
+    {% if messages %}
+        {% for message in messages %}
             {% if message.tags == 'success' %}
-              <div class="alert alert-success" role="alert">
-                {{ message }}
-              </div>
-            {% elif message.tags == 'error' %}
-              <div class="alert alert-danger" role="alert">
-                {{ message }}
-              </div>
-            {% else %}
-              <div class="alert alert-info" role="alert">
-                {{ message }}
-              </div>
-            {% endif %}
-          {% endfor %}
-        {% endif %}
-        <div class="row align-items-center">
-            <div class="col-lg-5">
-                <img class="img-fluid rounded mb-4 mb-lg-0" src="{{ about_us.0.image.url }}" alt="">
-            </div>
-            <div class="col-lg-7">
-                <div class="text-left mb-4">
-                    <h5 class="text-primary text-uppercase mb-3" style="letter-spacing: 5px;">{{ about_us.0.title }}</h5>
-                    <h1>{{ about_us.0.h1 }}</h1>
+                <div class="alert alert-success" role="alert">
+                    {{ message }}
                 </div>
-                <p>{{ about_us.0.description }}</p>
-                <a href="{{about_us.0.url}}" class="btn btn-primary py-md-2 px-md-4 font-weight-semi-bold mt-2">Learn More</a>
+            {% elif message.tags == 'error' %}
+                <div class="alert alert-danger" role="alert">
+                    {{ message }}
+                </div>
+            {% else %}
+                <div class="alert alert-info" role="alert">
+                    {{ message }}
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
+    <div class="row align-items-center">
+        <div class="col-md-3 text-center">
+            {% if course_registration.profile_picture %}
+                <img
+                  class="profile-img"
+                  src="{{ course_registration.profile_picture.url }}"
+                  alt="{{ user.username }} Profil Şəkli"
+                >
+            {% else %}
+                <img
+                  class="profile-img"
+                  src="{% static 'images/default_profile.png' %}"
+                  alt="Default Profile"
+                >
+            {% endif %}
+        </div>
+        <div class="col-md-9">
+            <div class="d-flex align-items-center justify-content-between">
+                <h2 class="mb-3">{{ user.username }}</h2>
+                <a href="#" class="btn btn-secondary" title="Parametrlər">
+                    <i class="fa-solid fa-user-gear"></i>
+                </a>
             </div>
+            <p class="lead">{{ course_registration.bio }}</p>
+            <p class="lead">{{ course_registration.experience }}</p>
+            <a href="#" class="btn btn-primary py-md-2 px-md-4 font-weight-semi-bold mt-2">Ətraflı</a>
         </div>
     </div>
 </div>
 
+<style>
+  .profile-img {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
+      margin: 0 auto 1rem; /* Mərkəzləşdirmə və alt boşluq */
+  }
+</style>
 {% endblock %}

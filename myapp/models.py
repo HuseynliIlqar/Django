@@ -161,7 +161,7 @@ class Blog(models.Model):
     description = models.TextField(max_length=1000, null=False, blank=False)
     main_content = models.TextField(max_length=5000, null=True, blank=True)
     slug = models.SlugField(unique=True, editable=False, db_index=True, blank=True)
-    is_active = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
     category = models.ManyToManyField(Category, related_name='posts')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

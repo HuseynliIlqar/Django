@@ -5,7 +5,6 @@ from .models import (
     GetInTouch, Contact, EmailSubscription, Blog, CourseRegistration,
     Category,Comment)
 
-
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
     list_display = ['body','active','published_date']

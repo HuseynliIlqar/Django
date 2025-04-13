@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.core.mail import send_mail
 from django.db.models import Q
@@ -266,21 +267,18 @@ def register_page(request):
         'categories': categories,
     })
 
-
+@login_required(login_url='myapp:login_page')
 def profile_page(request):
     categories = Category.objects.all()
     get_in_touch = GetInTouch.objects.all()
     courses = Courses.objects.all()
 
-    if not request.user.is_authenticated:
-        return redirect('myapp:login_page')
-
     user = request.user
-    course_registration = CourseRegistration.objects.filter(user=user)
+    registration_instance = get_object_or_404(CourseRegistration, user=request.user)
 
     return render(request, 'profile_page.html', {
         'user': user,
-        'course_registration': course_registration,
+        'course_registration': registration_instance,
         "get_in_touch": get_in_touch,
         "courses": courses,
         'categories': categories,
@@ -381,7 +379,7 @@ def blog(request, slug=None):
             Q(main_content__icontains=keyword)
         ).order_by('-created_at')
     else:
-        blog_list = Blog.objects.all().order_by('-created_at')
+        blog_list = Blog.objects.filter(is_active=True).order_by('-created_at')
 
     paginator = Paginator(blog_list, 6)
     page_number = request.GET.get('page')
