@@ -12,7 +12,7 @@ from .forms import ContactForm, EmailSubscriptionForm,CommentForm
 from .models import (
     IndexSlider, AboutUs, ExploreTopSubjects, Courses, Teachers,
     TestimonialSlider, GetInTouch, Blog, CourseRegistration,
-    Category,
+    Category,UpdateFontAwesome
 )
 
 def index(request):
@@ -24,6 +24,7 @@ def index(request):
     teachers = Teachers.objects.all()
     testimonials = TestimonialSlider.objects.all()
     get_in_touch = GetInTouch.objects.all()
+    font_awesome_updates = UpdateFontAwesome.objects.all().values('update_url')
     blogs = Blog.objects.order_by('-created_at')[:3]
 
     EXPERIENCES = ["Təcrübəsiz", "Tələbə", "Peşəkar"]
@@ -84,6 +85,7 @@ def index(request):
         "last_posts": blogs,
         'categories': categories,
         "experiences": EXPERIENCES,
+        'font_awesome_update':font_awesome_updates,
     })
 
 
@@ -93,6 +95,7 @@ def about(request):
     about_us = AboutUs.objects.all()
     get_in_touch = GetInTouch.objects.all()
     courses = Courses.objects.all()
+    font_awesome_updates = UpdateFontAwesome.objects.all().values('update_url')
 
     return render(request, 'about.html', {
         "get_in_touch": get_in_touch,
@@ -100,6 +103,7 @@ def about(request):
         "testimonial": testimonials,
         "courses": courses,
         'categories': categories,
+        'font_awesome_update': font_awesome_updates,
     })
 
 
@@ -107,6 +111,7 @@ def contact(request):
     categories = Category.objects.all()
     get_in_touch = GetInTouch.objects.all()
     courses = Courses.objects.all()
+    font_awesome_updates = UpdateFontAwesome.objects.all().values('update_url')
 
     if request.method == 'POST':
         form = ContactForm(request.POST)
@@ -124,6 +129,7 @@ def contact(request):
         "form": form,
         "courses": courses,
         'categories': categories,
+        'font_awesome_update': font_awesome_updates,
 
     })
 
@@ -133,12 +139,14 @@ def course(request):
     get_in_touch = GetInTouch.objects.all()
     explore_top_subjects = ExploreTopSubjects.objects.all()
     courses = Courses.objects.all()
+    font_awesome_updates = UpdateFontAwesome.objects.all().values('update_url')
 
     return render(request, 'course.html', {
         "get_in_touch": get_in_touch,
         "explore_top_subjects": explore_top_subjects,
         "courses": courses,
         'categories': categories,
+        'font_awesome_update': font_awesome_updates,
 
     })
 
@@ -148,12 +156,14 @@ def teacher(request):
     categories = Category.objects.all()
     get_in_touch = GetInTouch.objects.all()
     teachers = Teachers.objects.all()
+    font_awesome_updates = UpdateFontAwesome.objects.all().values('update_url')
 
     return render(request, 'teacher.html', {
         "get_in_touch": get_in_touch,
         "teacher": teachers,
         "courses": courses,
         'categories': categories,
+        'font_awesome_update': font_awesome_updates,
     })
 
 
@@ -170,6 +180,7 @@ def login_page(request):
     categories = Category.objects.all()
     get_in_touch = GetInTouch.objects.all()
     courses = Courses.objects.all()
+    font_awesome_updates = UpdateFontAwesome.objects.all().values('update_url')
 
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -192,6 +203,7 @@ def login_page(request):
         "get_in_touch": get_in_touch,
         "courses": courses,
         'categories': categories,
+        'font_awesome_update': font_awesome_updates,
 
     })
 
@@ -202,6 +214,7 @@ def register_page(request):
     categories = Category.objects.all()
     get_in_touch = GetInTouch.objects.all()
     courses = Courses.objects.all()
+    font_awesome_updates = UpdateFontAwesome.objects.all().values('update_url')
 
     EXPERIENCES = ["Təcrübəsiz", "Tələbə", "Peşəkar"]
 
@@ -265,6 +278,7 @@ def register_page(request):
         "get_in_touch": get_in_touch,
         "courses": courses,
         'categories': categories,
+        'font_awesome_update': font_awesome_updates,
     })
 
 @login_required(login_url='myapp:login_page')
@@ -272,6 +286,7 @@ def profile_page(request):
     categories = Category.objects.all()
     get_in_touch = GetInTouch.objects.all()
     courses = Courses.objects.all()
+    font_awesome_updates = UpdateFontAwesome.objects.all().values('update_url')
 
     user = request.user
     registration_instance = get_object_or_404(CourseRegistration, user=request.user)
@@ -282,6 +297,7 @@ def profile_page(request):
         "get_in_touch": get_in_touch,
         "courses": courses,
         'categories': categories,
+        'font_awesome_update': font_awesome_updates,
     })
 
 
@@ -290,12 +306,14 @@ def course_blog(request, slug):
     get_in_touch = GetInTouch.objects.all()
     course = get_object_or_404(Courses, slug=slug)
     courses = Courses.objects.all()
+    font_awesome_updates = UpdateFontAwesome.objects.all().values('update_url')
 
     return render(request, 'course_blog.html', {
         'get_in_touch': get_in_touch,
         'course': course,
         'courses': courses,
         'categories': categories,
+        'font_awesome_update': font_awesome_updates,
     })
 
 
@@ -343,6 +361,7 @@ def category_posts(request, slug):
     posts_list = selected_category.posts.all()
     categories = Category.objects.all()
     get_in_touch = GetInTouch.objects.all()
+    font_awesome_updates = UpdateFontAwesome.objects.all().values('update_url')
     blogs = Blog.objects.order_by('-created_at')[:3]
 
     paginator = Paginator(posts_list, 6)
@@ -357,6 +376,7 @@ def category_posts(request, slug):
         "last_posts": blogs,
         "get_in_touch": get_in_touch,
         "courses": courses,
+        'font_awesome_update': font_awesome_updates,
     })
 
 
@@ -364,6 +384,7 @@ def blog(request, slug=None):
     get_in_touch = GetInTouch.objects.all()
     courses = Courses.objects.all()
     categories = Category.objects.all()
+    font_awesome_updates = UpdateFontAwesome.objects.all().values('update_url')
     last_posts = Blog.objects.order_by('-created_at')[:3]
 
     course = None
@@ -387,10 +408,15 @@ def blog(request, slug=None):
 
     if request.method == 'POST':
         form = EmailSubscriptionForm(request.POST)
+
         if form.is_valid():
             form.save()
             messages.success(request, 'Qeydiyyatınız uğurla qəbul edildi')
             return redirect('myapp:blog')
+
+        else:
+            messages.error(request, 'Bu Email adresi qeydiyatdan keçib zəhmət olmasa başqa email adresi yazın')
+
     else:
         form = EmailSubscriptionForm()
 
@@ -404,6 +430,7 @@ def blog(request, slug=None):
         "form": form,
         "keyword": keyword,
         "course": course,
+        'font_awesome_update': font_awesome_updates,
     }
 
     return render(request, 'blog.html', context)
@@ -414,6 +441,7 @@ def single(request, slug):
     courses = Courses.objects.all()
     get_in_touch = GetInTouch.objects.all()
     categories = Category.objects.all()
+    font_awesome_updates = UpdateFontAwesome.objects.all().values('update_url')
     blogs = Blog.objects.order_by('-created_at')[:3]
 
     comments = post.comments.filter(active=True)
@@ -439,6 +467,7 @@ def single(request, slug):
         "comments": comments,
         "comment_form": comment_form,
         "new_comment": new_comment,
+        'font_awesome_update': font_awesome_updates,
     }
     return render(request, 'single.html', context)
 

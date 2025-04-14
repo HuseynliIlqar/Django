@@ -53,11 +53,14 @@ class Courses(models.Model):
         return reverse('course_blog', kwargs={'slug': self.slug})
 
 class Teachers(models.Model):
-    name = models.CharField(max_length=100)
-    image = models.ImageField(upload_to='images/', null=True, blank=True)
-    profession = models.CharField(max_length=100)
+    name = models.CharField(max_length=100,blank=False,null=False)
+    image = models.ImageField(upload_to='images/', null=False, blank=False,default='')
+    profession = models.CharField(max_length=100,null=False,blank=False)
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    READ_ME = models.TextField(editable=False,default=
+    'Burada Social Media iconlarının sadəcə adını yazaraq iconlarını çağırısan:')
 
     social_media_url_1 = models.URLField(max_length=100, null=True, blank=True)
     social_media_icon_1 = models.CharField(max_length=20, null=True, blank=True)
@@ -106,7 +109,7 @@ class Contact(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 class EmailSubscription(models.Model):
-    email = models.EmailField(max_length=100)
+    email = models.EmailField(max_length=100,unique=True)
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -191,3 +194,14 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"{self.author} - {self.body[:20]}"
+
+class UpdateFontAwesome(models.Model):
+    READ_ME = models.TextField(editable=False,default=(
+
+        "Buradan saytdakı ikonların çağırıldığı plugini sadəcə aşağıdakı URL-i dəyişərək update edə bilərsiniz.\n\n"
+        "Bəs necə update edək? Mən sizə sadəcə linkdəki rəqəmləri dəyişməyinizi tövsiyə edirəm:\n"
+        "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/<VERSIYA>/css/all.min.css"))
+
+    update_url = models.TextField(max_length=300,null=False,blank=False,default=
+    'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css')
+    updated_at = models.DateTimeField(auto_now=True)

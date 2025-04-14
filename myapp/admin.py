@@ -3,12 +3,11 @@ from .models import (
     IndexSlider, AboutUs, ExploreTopSubjects,
     Courses, Teachers, TestimonialSlider,
     GetInTouch, Contact, EmailSubscription, Blog, CourseRegistration,
-    Category,Comment)
+    Category,Comment,UpdateFontAwesome)
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
     list_display = ['body','active','published_date']
-
 
 @admin.register(Blog)
 class BlogAdmin(admin.ModelAdmin):
@@ -19,7 +18,6 @@ class BlogAdmin(admin.ModelAdmin):
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("name",)}
-
 
 @admin.register(Contact)
 class ContactAdmin(admin.ModelAdmin):
@@ -49,8 +47,14 @@ class CoursesAdmin(admin.ModelAdmin):
 
 @admin.register(Teachers)
 class TeachersAdmin(admin.ModelAdmin):
-    list_display = ('name', 'profession', 'created_at', 'updated_at')
-    search_fields = ('name', 'profession')
+    list_display = ('name', 'profession', 'created_at', 'updated_at',)
+    search_fields = ('name', 'profession',)
+    readonly_fields = ('READ_ME', 'created_at', 'updated_at',)
+    fields = ('name', 'profession','image',
+              'READ_ME',
+              'social_media_url_1','social_media_icon_1',
+              'social_media_url_2','social_media_icon_2',
+              'social_media_url_3','social_media_icon_3')
 
 @admin.register(TestimonialSlider)
 class TestimonialSliderAdmin(admin.ModelAdmin):
@@ -72,3 +76,10 @@ class CourseRegistrationAdmin(admin.ModelAdmin):
     list_display = ('user', 'experience', 'phone')
     search_fields = ('user__username', 'user__email', 'experience')
     list_filter = ('experience',)
+
+@admin.register(UpdateFontAwesome)
+class UpdateFontAwesomeAdmin(admin.ModelAdmin):
+    list_display = ('update_url',)
+    readonly_fields = ('READ_ME','updated_at',)
+    fields = ('READ_ME','update_url','updated_at',)
+
