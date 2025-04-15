@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.conf import settings
+from django.utils.translation import gettext as _
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
@@ -28,6 +29,7 @@ def index(request):
     blogs = Blog.objects.order_by('-created_at')[:3]
 
     EXPERIENCES = ["Təcrübəsiz", "Tələbə", "Peşəkar"]
+
 
     if request.method == 'POST':
         username = request.POST.get('username')
