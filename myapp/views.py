@@ -3,13 +3,22 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.conf import settings
+from rest_framework.exceptions import NotFound
+from rest_framework import viewsets, filters
 from django.utils.translation import gettext as _
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.core.mail import send_mail
 from django.db.models import Q
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.decorators import action
 from .forms import ContactForm, EmailSubscriptionForm,CommentForm
+from .serializers import (BlogSerializer, IndexSliderSerializer,AboutUsSerializer,
+                          ExploreTopSubjectsSerializer,CoursesSerializer,TeachersSerializer,
+                          TestimonialSliderSerializer,GetInTouchSerializer,CategorySerializer
+                          )
 from .models import (
     IndexSlider, AboutUs, ExploreTopSubjects, Courses, Teachers,
     TestimonialSlider, GetInTouch, Blog, CourseRegistration,
@@ -473,3 +482,39 @@ def single(request, slug):
     }
     return render(request, 'single.html', context)
 
+
+class BlogViewSet(viewsets.ModelViewSet):
+    queryset = Blog.objects.all()
+    serializer_class = BlogSerializer
+
+class IndexSliderViewSet(viewsets.ModelViewSet):
+    queryset = IndexSlider.objects.all()
+    serializer_class = IndexSliderSerializer
+
+class AboutUsViewSet(viewsets.ModelViewSet):
+    queryset = AboutUs.objects.all()
+    serializer_class = AboutUsSerializer
+
+class ExploreTopSubjectsViewSet(viewsets.ModelViewSet):
+    queryset = ExploreTopSubjects.objects.all()
+    serializer_class = ExploreTopSubjectsSerializer
+
+class CoursesViewSet(viewsets.ModelViewSet):
+    queryset = Courses.objects.all()
+    serializer_class = CoursesSerializer
+
+class TeachersViewSet(viewsets.ModelViewSet):
+    queryset = Teachers.objects.all()
+    serializer_class = TeachersSerializer
+
+class TestimonialSliderViewSet(viewsets.ModelViewSet):
+    queryset = TestimonialSlider.objects.all()
+    serializer_class = TestimonialSliderSerializer
+
+class GetInTouchViewSet(viewsets.ModelViewSet):
+    queryset = GetInTouch.objects.all()
+    serializer_class = GetInTouchSerializer
+
+class CategoryViewSet(viewsets.ModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer

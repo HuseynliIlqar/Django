@@ -8,8 +8,8 @@ from django.urls import reverse
 class IndexSlider(models.Model):
     title = models.CharField(max_length=100)
     subtitle = models.CharField(max_length=200)
-    url = models.CharField(null=True, blank=True)
-    image = models.ImageField(upload_to='images/', null=True, blank=True)
+    url = models.CharField(null=False, blank=False)
+    image = models.ImageField(upload_to='images/', null=False, blank=False)
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -32,14 +32,14 @@ class ExploreTopSubjects(models.Model):
 
 class Courses(models.Model):
     title = models.CharField(max_length=100)
-    h1 = models.CharField(max_length=100, blank=True, null=True)
+    h1 = models.CharField(max_length=100, blank=False, null=False)
     course_description = models.TextField(blank=False, null=False, max_length=1000, default="Açıqlama")
     courese_requirements = models.TextField(blank=False, null=False, max_length=1000, default="Tələblər")
-    image = models.ImageField(upload_to='images/', null=True, blank=True)
+    image = models.ImageField(upload_to='images/', null=False, blank=False)
     course_hour = models.CharField(max_length=10)
     student_count = models.CharField(max_length=10)
     course_star = models.CharField(max_length=10)
-    course_comment_count = models.CharField(max_length=10, blank=True)
+    course_comment_count = models.CharField(max_length=10, blank=False)
     slug = models.SlugField(null=False, blank=True, unique=True, db_index=True, editable=False)
     course_price = models.CharField(max_length=10)
     created_at = models.DateTimeField(auto_now=True)
@@ -140,16 +140,11 @@ class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(unique=True, blank=True)
 
-    def __str__(self):
-        return self.name
-
     def save(self, *args, **kwargs):
         if not self.slug:
-            # Əsas slug dəyəri yaradılır
             self.slug = slugify(self.name)
             original_slug = self.slug
             counter = 1
-            # Mövcud slug varsa, avtomatik counter əlavə edilir
             while Category.objects.filter(slug=self.slug).exists():
                 self.slug = f"{original_slug}-{counter}"
                 counter += 1
