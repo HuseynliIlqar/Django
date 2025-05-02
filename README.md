@@ -12,7 +12,8 @@
   - Blog postları yaradıb paylaşma  
   - Kursları idarə etmə (yaratma, redaktə, silmə)  
 - **İstifadəçi (müştəri) interface:**  
-  - Mövcud kursları siyahılama 
+  - Mövcud kursları siyahılama
+  - “Login” / “Register” sistemi  
 - **Müraciətlərin emalı:**
   - Form məlumatları email vasitəsilə müəyyən edilmiş ünvanlara göndərilir  
 - **Tam dinamik struktur:**  
